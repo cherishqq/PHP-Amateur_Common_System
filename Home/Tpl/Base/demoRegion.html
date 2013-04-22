@@ -1,0 +1,17 @@
+<html>
+    <head>
+         <js href="/Public/Min/?f=/Public/Js/jquery-1.9.0.min.js|/Public/Js/region.js"/>
+    </head>
+    <body>
+        <select name="province" id="province" onchange="loadRegion('province',2,'city','{:U('Base/getRegion')}');">
+            <option value="0" selected>省份/直辖市</option><volist name="province" id="vo">
+                <option value="{$vo.id}" >{$vo.name}</option></volist>
+        </select>
+        <select name="city" id="city"  onchange="loadRegion('city',3,'town','{:U('Base/getRegion')}');">
+            <option value="0">市/县</option>
+        </select>
+        <select name="town" id="town">
+            <option value="0">镇/区</option>
+        </select>
+    </body>
+</html>

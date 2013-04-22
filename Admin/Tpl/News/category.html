@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>资讯分类管理-资讯管理-后台管理首页-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='资讯管理 > 资讯分类管理';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr">
+                        <div class="current">资讯分类管理</div>
+                    </div>
+                    <form action="" method="post" id="quickForm">
+                        <b>添加分类：</b>
+                        <input type="hidden" name="act" value="add" /> &nbsp;
+                        <select name="data[pid]">
+                            <option value="0">顶级分类</option>
+                            <volist name="list" id="vo">
+                                <option value="{$vo.cid}">{$vo.fullname}</option>
+                            </volist>
+                        </select>  &nbsp;
+                        <input placeholder="你要添加的分类名称" id="newName" class="input" type="text" name="data[name]" value="" /> &nbsp;
+                        <button class="btn quickSubmit">确定添加</button>
+                    </form>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="tab">
+                        <thead>
+                            <tr align="center">
+                                <td width="10%">原分类CID</td>
+                                <td width="20%">原分类结构 <b title="单击分类隐藏/显示该分类下在子类">[i]</b></td>
+                                <td width="20%" align="left">操作属性</td>
+                                <td width="20%">新分类</td>
+                                <td width="20%">修改后的名称</td>
+                                <td width="10%">操作</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="list" id="tree">
+                                <tr pid="{$tree.pid}" cid="{$tree.cid}">
+                                    <td width="10%" align="center">{$tree.cid}<input type="hidden" name="cid" value="{$tree.cid}"/></td>
+                                    <td width="20%" class="tree" style="cursor: pointer;">{$tree.fullname}</td>
+                                    <td width="20%">
+                                        <select name="act" class="act">
+                                            <option selected="selected" value="edit">修改该分类</option>
+                                            <option value="del">删除该分类</option>
+                                            <option value="add">在该分类中添加子类</option>
+                                        </select>
+                                    </td>
+                                    <td width="20%">
+                                        <select name="pid">
+                                            <option value="0">顶级分类</option>
+                                            <volist name="list" id="vo1">
+                                                <if condition="$vo1['cid'] eq $tree['cid']">
+                                                    <option value="{$vo1.cid}" selected="selected" readonly>{$vo1.fullname}</option>
+                                                    <else/>
+                                                    <option value="{$vo1.cid}">{$vo1.fullname}</option>
+                                                </if>
+                                            </volist>
+                                        </select>
+                                    </td>
+                                    <td width="20%"><input type="text" value="" name="name" class="input" placeholder="你要修改分类的新名称"/></td>
+                                    <td align="center" width="10%"><button class="btn opCat">确定</button></td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <form action="" method="post" id="opForm">
+            <input id="cid" type="hidden" name="data[cid]" />
+            <input id="act" type="hidden" name="act" />
+            <input id="pid" type="hidden" name="data[pid]" />
+            <input id="name" type="hidden" name="data[name]" />
+        </form>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                $(".opCat").click(function(){
+                    var obj=$(this).parents("tr");
+                    $("#cid").val(obj.find("input[name='cid']").val());
+                    $("#act").val(obj.find("select[name='act']").val());
+                    $("#pid").val(obj.find("select[name='pid']").val());
+                    $("#name").val(obj.find("input[name='name']").val());
+                    if($("#act").val()=="del"){
+                        popup.confirm('你真的打算删除该分类吗?','温馨提示',function(action){
+                            if(action == 'ok'){
+                                commonAjaxSubmit("","#opForm");
+                            }
+                        });
+                        return false;
+                    }
+                    commonAjaxSubmit("","#opForm");
+                });
+                $(".quickSubmit").click(function(){
+                    if($("#newName").val()==''){
+                        popup.alert("分类名称不能为空滴！");
+                        return false;
+                    }
+                    commonAjaxSubmit("","#quickForm");
+                    return false;
+                });
+
+                var chn=function(cid,op){
+                    if(op=="show"){
+                        $("tr[pid='"+cid+"']").each(function(){
+                            $(this).removeAttr("status").show();
+                            chn($(this).attr("cid"),"show");
+                        });
+                    }else{
+                        $("tr[pid='"+cid+"']").each(function(){
+                            $(this).attr("status",1).hide();
+                            chn($(this).attr("cid"),"hide");
+                        });
+                    }
+                }
+                $(".tree").click(function(){
+                    if($(this).attr("status")!=1){
+                        chn($(this).parent().attr("cid"),"hide");
+                        $(this).attr("status",1);
+                    }else{
+                        chn($(this).parent().attr("cid"),"show");
+                        $(this).removeAttr("status");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>数据压缩包管理-数据管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='数据管理 > 数据压缩包管理';
+        </php>
+        <css href="{$site.WEB_ROOT}Public/Min/?f=../Public/Css/base.css|../Public/Css/layout.css|__PUBLIC__/Js/asyncbox/skins/default.css{$addCss}"/>
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr">
+                        <span class="fr">共有{$files}个压缩包文件，共计{$total}</span>
+                        <div class="current">数据库压缩包文件列表</div>
+                    </div>
+                    <form>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                            <thead>
+                                <tr>
+                                    <td width="90"><label><input name="" class="chooseAll" type="checkbox"/> 全选</label> <label><input name="" class="unsetAll" type="checkbox"/> 反选</label></td>
+                                    <td>压缩包名称</td>
+                                    <td>打包时间</td>
+                                    <td>文件大小</td>
+                                    <td>解压</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <volist name="list" id="zip">
+                                    <tr align="center">
+                                        <td><input type="checkbox" name="zipFiles[]" value="{$zip.file}"/></td>
+                                        <td align="left"><a href="{:U('SysData/downFile',array('file'=>$zip['file'],'type'=>'zip'))}" target="_blank">{$zip.file}</a></td>
+                                        <td>{$zip.time}</td>
+                                        <td>{$zip.size}</td>
+                                        <td><button class="btn unzip" file="{$zip.file}">解压</button></td>
+                                    </tr>
+                                </volist>
+                            </tbody>
+                            <tfoot align="center">
+                                <tr>
+                                    <td width="90"><label><input name="" class="chooseAll" type="checkbox"/> 全选</label> <label><input name="" class="unsetAll" type="checkbox"/> 反选</label></td>
+                                    <td>压缩包名称</td>
+                                    <td>备份时间</td>
+                                    <td>总计：{$total}</td>
+                                    <td>解压</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </form>
+                    <div class="commonBtnArea" >
+                        <span class="fr" id="opStatus" style="width:450px; display: none; margin: -8px; line-height: 16px;"></span>
+                        <button class="btn delZipFiles">删除所选</button>
+                        <button class="btn unzipSelect">解压缩所选</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <js href="{$site.WEB_ROOT}Public/Min/?f=__PUBLIC__/Js/jquery-1.7.2.min.js|__PUBLIC__/Js/jquery.lazyload.js|__PUBLIC__/Js/functions.js|../Public/Js/base.js|__PUBLIC__/Js/jquery.form.js|__PUBLIC__/Js/asyncbox/asyncbox.js"/>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                //全新反选
+                clickCheckbox();
+
+                var repeat=function(url){
+                    $.post(url, function(json){
+//                        var json = eval("(" + json + ")");
+                        if(json.status==1){
+                            if(json.url){
+                                $("#opStatus").html(json.info);
+                                repeat(json.url);
+                            }else{
+                                popup.success(json.info,'oh yeah',function(action){
+                                    if(action == 'ok'){
+                                        $("#opStatus").hide('solw');
+                                        $(".unzipSelect").html('解压缩所选');
+                                    }
+                                });
+                                $(".btn").removeAttr("disabledSubmit");
+                            }
+                        }else{
+                            popup.error(json.info);
+                        }
+                    });
+                }
+
+                $(".unzipSelect").click(function(){
+                    if($(this).attr("disabledSubmit")){
+                        popup.alert("已提交，系统在处理中...");
+                        return false;
+                    }
+                    if($("tbody input[type='checkbox']:checked").size()==0){
+                        popup.alert("请先选择你要删除的数据库表吧");
+                        return false;
+                    }
+                    var files=[];
+                    $("tbody input[type='checkbox'][name='zipFiles[]']:checked").each(function(i){
+                        files[i]=$(this).val();
+                    });
+                    $.post("__URL__/unzipSqlfile", {'zipFiles':files}, function(json){
+//                        var json = eval("(" + json + ")");
+                        if(json.status==1){
+                            if(json.url){
+                                $("#opStatus").show().html(json.info);
+                                repeat(json.url);
+                            }else{
+                                popup.success(json.info);
+                            }
+                            popup.close("asyncbox_alert");
+                        }else{
+                            popup.error(json.info);
+                        }
+                    });
+
+                    return false;
+                });
+
+
+                $(".unzip").click(function(){
+                    $.post("__URL__/unzipSqlfile",{'zipFiles[]':$(this).attr("file")},function(json){
+//                        var json = eval("(" + json + ")");
+                        json.status==1?popup.success(json.info):popup.error(json.info);
+                        $(".btn").removeAttr("disabledSubmit");
+                        if(json.url&&json.url!=''){
+                            setTimeout(function(){
+                                top.window.location.href=json.url;
+                            },2000);
+                        }
+                    });
+                    return false;
+                });
+                //删除备份文件
+                $(".delZipFiles").click(function(){
+                    if($(this).attr("disabledSubmit")){
+                        popup.alert("已提交，系统在处理中...");
+
+                    }
+                    if($("tbody input[type='checkbox']:checked").size()==0){
+                        popup.alert("请先选择你要删除的zip文件吧");
+                        return false;
+                    }
+                    popup.confirm('你确定要删除备份文件吗？','温馨提示',function(action){
+                        if(action == 'ok'){
+                            $(".btn").attr("disabledSubmit",true);
+                            $(this).html("提交处理中...");
+                            commonAjaxSubmit("__URL__/delZipFiles");
+                        }
+                    });
+                    return false;
+                });
+            });
+        </script>
+    </body>
+</html>

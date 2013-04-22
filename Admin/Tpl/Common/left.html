@@ -1,0 +1,12 @@
+<div id="Left">
+    <div id="control" class=""></div>
+    <div class="subMenuList">
+        <div class="itemTitle"><if condition="MODULE_NAME eq 'Index'">常用操作<else/>子菜单</if> </div>
+        <ul>
+            <foreach name="sub_menu" item="sv">
+                <li><a href="{$sv.url}">{$sv.title}</a></li>
+            </foreach>
+        </ul>
+    </div>
+    <div class="QRcode">移动设备访问本页：<br/><br/><img src="{$QRcodeUrl}"/></div>
+</div>

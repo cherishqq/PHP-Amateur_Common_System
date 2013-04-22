@@ -1,0 +1,14 @@
+php_flag zlib.output_compression on
+php_value zlib.output_compression_level 9
+
+Options +FollowSymLinks -MultiViews
+RewriteEngine On
+RewriteBase /
+RewriteCond %{QUERY_STRING} ^(.*)$
+
+#ErrorDocument 404 /404.html
+
+
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} ^TRACE
+RewriteRule .* - [F]

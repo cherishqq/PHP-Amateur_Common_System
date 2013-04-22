@@ -1,0 +1,1 @@
+<div class="footer"> &copy; 2012-2013 <a href="http://blog.51edm.org" target="_blank">blog.51edm.org</a> 永不言弃 </div>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>添加编辑节点-权限管理-{$site.SITE_INFO.name}</title>
+    <php>
+        $addCss="";
+        $addJs="";
+        $currentNav ='权限管理 > 添加编辑节点';
+    </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr">
+                        <div class="current">添加编辑节点</div>
+                    </div>
+                    <form action="" method="post">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th width="120">名称：</th>
+                                <td><input name="name" type="text" class="input" size="40" value="{$info.name}" /> 英文，为MODEL_NAME的时候首字母大写</td>
+                            </tr>
+                            <tr>
+                                <th>显示名：</th>
+                                <td><input class="input" name="title" type="text" size="40" value="{$info.title}" /> 中英文均可</td>
+                            </tr>
+                            <tr>
+                                <th>状态：</th>
+                                <td><select name="status" style="width: 80px;"><if condition="$info.status eq 1"><option value="1" selected>启用</option><option value="0">禁用</option><else/><option value="1">启用</option><option value="0" selected>禁用</option></if></select> 如果禁用那么只有超级管理员才可以访问，其他用户都无权访问</td>
+                            </tr>
+                            <tr>
+                                <th>类型：</th>
+                                <td><select name="level" style="min-width: 80px;">{$info.levelOption}</select> 项目（GROUP_NAME;  模块(MODEL_NAME); 操作（ACTION_NAME）</td>
+                            </tr>
+                            <tr>
+                                <th>父级节点：</th>
+                                <td><select name="pid" style="min-width: 80px;">{$info.pidOption}</select></td>
+                            </tr>
+                            <tr>
+                                <th>显示排序：</th>
+                                <td><input class="input" name="sort" type="text" size="40" value="{$info.sort}" /> </td>
+                            </tr>
+                            <tr>
+                                <th>描 述：</th>
+                                <td><textarea name="remark" style="width: 400px;">{$info.remark}</textarea></td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="id" value="{$info.id}"/>
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<script type="text/javascript">
+    $(function(){
+        $("select[name='level']").change(function(){
+            var level=$(this).val();
+            $("select[name='pid']>option").attr("disabled","disabled");
+            if(level==1){
+                $("select[name='pid']>option[value='0']").removeAttr("disabled").attr("selected","selected");
+            }else if(level==2){
+                $("select[name='pid']>option[level='1']").removeAttr("disabled");
+            }else{
+                $("select[name='pid']>option[level='2']").removeAttr("disabled");
+            }
+        });
+
+        $(".submit").click(function(){
+            commonAjaxSubmit();
+        });
+    });
+</script>
+</body>
+</html>

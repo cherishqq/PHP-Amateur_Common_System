@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>权限管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='权限管理 > 管理员列表';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr">
+                        <div class="current">管理员列表</div>
+                    </div>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>AID</td>
+                                <td>账号</td>
+                                <td>状态</td>
+                                <td>备注</td>
+                                <td>开通时间</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo">
+                            <tr align="center" aid="{$vo.aid}">
+                                <td>{$vo.aid}</td>
+                                <td>{$vo.email}</td>
+                                <td>{$vo.statusTxt}</td>
+                                <td>{$vo.remark}</td>
+                                <td>{$vo.time|date='Y-m-d H:i:s',###}</td>
+                                <td><if condition="$vo.email eq C('ADMIN_AUTH_KEY')">--<else/>[ <a href="__URL__/editAdmin?aid={$vo.aid}">编辑</a> ]</if></td>
+                            </tr>
+                        </volist>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+    </body>
+</html>

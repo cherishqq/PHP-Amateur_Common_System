@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>邮箱配置-系统设置-{$site.SITE_INFO.name}</title>
+    <include file="Common:intoHead" />
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr">
+                        <div class="current">邮箱配置</div>
+                    </div>
+                    <form action="" method="post">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th width="120">邮件服务器：</th>
+                                <td><input name="smtp_host" type="text" class="input" size="40" value="{$site.SYSTEM_EMAIL.smtp_host}" /></td>
+                            </tr>
+                            <tr>
+                                <th>邮件发送端口：</th>
+                                <td><input class="input" name="smtp_port" type="text" size="40" value="{$site.SYSTEM_EMAIL.smtp_port}" /></td>
+                            </tr>
+                            <tr>
+                                <th>发件人地址：</th>
+                                <td><input class="input" name="from_email" type="text" size="40" value="{$site.SYSTEM_EMAIL.from_email}" /></td>
+                            </tr>
+                            <tr>
+                                <th>发件人名称：</th>
+                                <td><input class="input" name="from_name" type="text" size="40" value="{$site.SYSTEM_EMAIL.from_name}" /></td>
+                            </tr>
+                            <tr>
+                                <th>验证用户名：</th>
+                                <td><input class="input" name="smtp_user" type="text" size="40" value="{$site.SYSTEM_EMAIL.smtp_user}" /></td>
+                            </tr>
+                            <tr>
+                                <th>验证密码：</th>
+                                <td><input class="input" name="smtp_pass" type="password" size="40" value="{$site.SYSTEM_EMAIL.smtp_pass}" /></td>
+                            </tr>
+                            <tr>
+                                <th>回复EMAIL：</th>
+                                <td><input class="input" name="reply_email" type="text" size="40" value="{$site.SYSTEM_EMAIL.reply_email}" /> （留空则为发件人EMAIL）</td>
+                            </tr>
+                            <tr>
+                                <th>回复名称：</th>
+                                <td><input class="input" name="reply_name" type="text" size="40" value="{$site.SYSTEM_EMAIL.reply_name}" /> （留空则为发件人名称）</td>
+                            </tr>
+                            <tr>
+                                <th>接收测试邮件地址：</th>
+                                <td><input class="input" name="test_email" type="text" size="40" value="{$site.SYSTEM_EMAIL.test_email}" /> （只有填写了接收测试邮件地址方可测试邮件配置是否成功）</td>
+                            </tr>
+                        </table>
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                        <button class="btn test">测试配置是否成功</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<script type="text/javascript">
+    $(".submit").click(function(){
+        commonAjaxSubmit();
+    });
+    $(".test").click(function(){
+        if($.trim($("input[name='test_email']").val())==''){
+            popup.alert("没有填写接收测试邮件地址，无法发送测试邮件");
+            return;
+        }
+        commonAjaxSubmit('{:U("Webinfo/testEmailConfig")}');
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<div id="Top">
+    <div class="logo"><a href="{$site.WEB_ROOT}"><img src="../Public/Img/logo.gif" /></a></div>
+    <div class="help"><a href="#">使用帮助</a><span><a href="#">关于</a></span></div>
+    <div class="menu">
+        <ul> {$menu} </ul>
+    </div>
+</div>
+<div id="Tags">
+    <div class="userPhoto"><img src="../Public/Img/userPhoto.jpg" /> </div>
+    <div class="navArea">
+        <div class="userInfo"><div><a href="{:U('Webinfo/index')}" class="sysSet"><span>&nbsp;</span>系统设置</a> <a href="{:U("Public/loginOut")}" class="loginOut"><span>&nbsp;</span>退出系统</a></div>欢迎您，{$my_info.email} | <a href="#">个人信息管理</a> | <a href="#">个人信息管理</a> | <a href="#">个人信息管理</a></div>
+        <div class="nav"><font id="today"><php>echo date("Y-m-d H:i:s");</php></font>您的位置：{$currentNav}</div>
+    </div>
+</div>
+<div class="clear"></div>

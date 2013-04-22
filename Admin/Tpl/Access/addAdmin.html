@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>添加管理员-权限管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='权限管理 > 添加管理员';
+        </php>
+    <include file="Common:intoHead" />
+</head>
+<body>
+    <div class="wrap"> <include file="Common:head" />
+        <div class="mainBody"> <include file="Common:left" />
+            <div id="Right">
+                <div class="contentArea">
+                    <div class="Item hr">
+                        <div class="current">添加管理员</div>
+                    </div>
+                    <form action="" method="post">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table1">
+                            <tr>
+                                <th width="120">账号邮件地址：</th>
+                                <td><input <if condition="ACTION_NAME eq 'editAdmin'"> disabled="disabled"</if> name="email" type="text" class="input" size="40" value="{$info.email}" /></td>
+                            </tr>
+                            <tr>
+                                <th>新密码：</th>
+                                <td><input class="input" name="pwd" type="password" size="40" value="" /></td>
+                            </tr>
+                            <tr>
+                                <th>状态：</th>
+                                <td>
+                                    <select name="status" style="width: 80px;">
+                                        <if condition="$info.status eq 1">
+                                            <option value="1" selected>启用</option>
+                                            <option value="0">禁用</option>
+                                            <else/>
+                                            <option value="1">启用</option>
+                                            <option value="0" selected>禁用</option>
+                                        </if>
+                                    </select>
+                                    如果禁用了将无法登陆本系统</td>
+                            </tr>
+                            <tr>
+                                <th>所属用户组</th>
+                                <td><select name="role_id" style="min-width: 80px;">{$info.roleOption}</select></td>
+                            </tr>
+                            <tr>
+                                <th>备注：</th>
+                                <td><textarea name="remark" rows="5" cols="57">{$info.remark}</textarea></td>
+                            </tr>
+                        </table>
+                        <input type="hidden" name="aid" value="{$info.aid}"/>
+                    </form>
+                    <div class="commonBtnArea">
+                        <button class="btn submit">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+<include file="Common:foot" />
+<script type="text/javascript">
+    $(".submit").click(function(){
+            <if condition="ACTION_NAME neq 'editAdmin'">
+            if(!isEmail($("input[name='email']").val())){
+            popup.alert("账号邮件地址格式错误");
+            return false;
+        }
+        if($.trim($("input[name='pwd']").val())==''){
+            popup.alert("密码不能为空");
+            return false;
+        }
+            </if>
+            commonAjaxSubmit();
+    });
+</script>
+</body>
+</html>

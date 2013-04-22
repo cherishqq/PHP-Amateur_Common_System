@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>权限分配-权限管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='权限管理 > 权限分配';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr">
+                        <div class="current">权限分配</div>
+                    </div>
+                    <p>你正在为用户组：<b>{$info.name}</b> 分配权限 。项目和版块有全选和取消全选功能</p>
+                    <form>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                            <volist name="nodeList" id="level1">
+                                <tr>
+                                    <td style="font-size: 14px;"><label><input name="data[]" level="1" type="checkbox" obj="node_{$level1.id}" value="{$level1.id}:1:0"/> <b>[项目]</b> {$level1.title}</label></td>
+                                </tr>
+                                <volist name="level1['data']" id="level2">
+                                    <tr>
+                                        <td style="padding-left: 30px; font-size: 14px;"><label><input name="data[]" level="2" type="checkbox" obj="node_{$level1.id}_{$level2.id}" value="{$level2.id}:2:{$level2.pid}"/> <b>[模块]</b> {$level2.title}</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-left: 50px;">
+                                            <volist name="level2['data']" id="level3">
+                                                <label><input name="data[]" level="3" type="checkbox" obj="node_{$level1.id}_{$level2.id}_{$level3.id}" value="{$level3.id}:3:{$level3.pid}"/> {$level3.title}</label> &nbsp;&nbsp;&nbsp;
+                                            </volist>
+                                        </td>
+                                    </tr>
+                                </volist>
+                            </volist>
+                        </table>
+                        <input type="hidden" name="id" value="{$info.id}"/>
+                    </form>
+                    <div class="commonBtnArea" >
+                        <button class="btn submit">提交</button>
+                        <button class="btn reset">重置</button>
+                        <button class="btn empty">清空</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            //初始化数据
+            function setAccess(){
+                //清空所有已选中的
+                $("input[type='checkbox']").prop("checked",false);
+                //数据格式：
+                //节点ID：node_id；1，项目；2，模块；3，操作
+                //节点级别：level；
+                //父级节点ID：pid
+                var access=$.parseJSON('{$info.access}');
+                var access_length=access.length;
+                if(access_length>0){
+                    for(var i=0;i<access_length;i++){
+                        $("input[type='checkbox'][value='"+access[i]['val']+"']").prop("checked","checked");
+                    }
+                }
+            }
+            $(function(){
+                //执行初始化数据操作
+                setAccess();
+                //为项目时候全选本项目所有操作
+                $("input[level='1']").click(function(){
+                    var obj=$(this).attr("obj")+"_";
+                    $("input[obj^='"+obj+"']").prop("checked",$(this).prop("checked"));
+                });
+                //为模块时候全选本模块所有操作
+                $("input[level='2']").click(function(){
+                    var obj=$(this).attr("obj")+"_";
+                    $("input[obj^='"+obj+"']").prop("checked",$(this).prop("checked"));
+                    //分隔obj为数组
+                    var tem=obj.split("_");
+                    //将当前模块父级选中
+                    if($(this).prop('checked')){
+                        $("input[obj='node_"+tem[1]+"']").prop("checked","checked");
+                    }
+                });
+                //为操作时只要有勾选就选中所属模块和所属项目
+                $("input[level='3']").click(function(){
+                    var tem=$(this).attr("obj").split("_");
+                    if($(this).prop('checked')){
+                        //所属项目
+                        $("input[obj='node_"+tem[1]+"']").prop("checked","checked");
+                        //所属模块
+                        $("input[obj='node_"+tem[1]+"_"+tem[2]+"']").prop("checked","checked");
+                    }
+                });
+                //重置初始状态，勾选错误时恢复
+                $(".reset").click(function(){
+                    setAccess();
+                });
+                //清空当前已经选中的
+                $(".empty").click(function(){
+                    $("input[type='checkbox']").prop("checked",false);
+                });
+                $(".submit").click(function(){
+                    commonAjaxSubmit();
+                });
+            });
+        </script>
+    </body>
+</html>

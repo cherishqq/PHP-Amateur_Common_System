@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>节点管理-权限管理-后台管理-{$site.SITE_INFO.name}</title>
+        <php>
+            $addCss="";
+            $addJs="";
+            $currentNav ='权限管理 > 节点管理';
+        </php>
+        <include file="Common:intoHead" />
+    </head>
+    <body>
+        <div class="wrap">
+            <include file="Common:head" />
+            <div class="mainBody">
+                <include file="Common:left" />
+                <div id="Right">
+                    <div class="Item hr">
+                        <div class="current">节点管理</div>
+                    </div>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab">
+                        <thead>
+                            <tr>
+                                <td>序号</td>
+                                <td>节点结构  <b title="单击分类隐藏/显示该分类下在子类">[i]</b></td>
+                                <td>节点ID</td>
+                                <td>名称</td>
+                                <td>显示名</td>
+                                <td>排序名称</td>
+                                <td>类型</td>
+                                <td>状态</td>
+                                <td width="150">操作</td>
+                            </tr>
+                        </thead>
+                        <volist name="list" id="vo" key="k">
+                            <tr align="center" id="{$vo.id}" pid="{$vo.pid}">
+                                <td>{$k}</td>
+                                <td align="left" class="tree" style="cursor: pointer;">{$vo.fullname}</td>
+                                <td>{$vo.id}</td>
+                                <td>{$vo.name}</td>
+                                <td>{$vo.title}</td>
+                                <td edit="0" fd="sort">{$vo.sort}</td>
+                                <td>{$vo.level}</td>
+                                <td>{$vo.statusTxt}</td>
+                                <td>[ <a href="javascript:void(0);" class="opStatus" val="{$vo.status}">{$vo.chStatusTxt}</a> ] [ <a href="__URL__/editNode?id={$vo.id}" class="edit">编辑</a> ]</td>
+                            </tr>
+                        </volist>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <include file="Common:foot" />
+        <script type="text/javascript">
+            $(function(){
+                //快捷启用禁用操作
+                $(".opStatus").click(function(){
+                    var obj=$(this);
+                    var id=$(this).parents("tr").attr("id");
+                    var status=$(this).attr("val");
+                    $.getJSON("__URL__/opNodeStatus", { id:id, status:status }, function(json){
+                        if(json.status==1){
+                            popup.success(json.info);
+                            $(obj).attr("val",json.data.status).html(status==1?"启用":"禁用").parents("td").prev().html(status==1?"禁用":"启用");
+                        }else{
+                            popup.alert(json.info);
+                        }
+                    });
+                });
+
+                //快捷改变操作排序dblclick
+                $("tbody>tr>td[fd]").click(function(){
+                    var inval = $(this).html();
+                    var infd = $(this).attr("fd");
+                    var inid =  $(this).parents("tr").attr("id");
+                    if($(this).attr('edit')==0){
+                        $(this).attr('edit','1').html("<input class='input' size='5' id='edit_"+infd+"_"+inid+"' value='"+inval+"' />").find("input").select();
+                    }
+                    $("#edit_"+infd+"_"+inid).focus().bind("blur",function(){
+                        var editval = $(this).val();
+                        $(this).parents("td").html(editval).attr('edit','0');
+                        if(inval!=editval){
+                            $.post("__URL__/opSort",{id:inid,fd:infd,sort:editval});
+                        }
+                    })
+                });
+
+                var chn=function(cid,op){
+                    if(op=="show"){
+                        $("tr[pid='"+cid+"']").each(function(){
+                            $(this).removeAttr("status").show();
+                            chn($(this).attr("id"),"show");
+                        });
+                    }else{
+                        $("tr[pid='"+cid+"']").each(function(){
+                            $(this).attr("status",1).hide();
+                            chn($(this).attr("id"),"hide");
+                        });
+                    }
+                }
+                $(".tree").click(function(){
+                    if($(this).attr("status")!=1){
+                        chn($(this).parent().attr("id"),"hide");
+                        $(this).attr("status",1);
+                    }else{
+                        chn($(this).parent().attr("id"),"show");
+                        $(this).removeAttr("status");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
