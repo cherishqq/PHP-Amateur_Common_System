@@ -5,10 +5,8 @@
  */
 function getBodySize(get) {
     var bodySize = [];
-    with(document.documentElement) {
-        bodySize['w'] = (scrollWidth > clientWidth) ? scrollWidth: clientWidth;
-        bodySize['h'] = (scrollHeight > clientHeight) ? scrollHeight: clientHeight;
-        }
+    bodySize['w']=($(document).width()>$(window).width())? $(window).width():$(window).width();
+    bodySize['h']=($(document).height()>$(window).height())? $(window).height():$(window).height();
     return get?bodySize[get]:bodySize;
 }
 
@@ -41,10 +39,14 @@ function commonAjaxSubmit(url,formObj){
                 },2000);
             }
             if(data.url&&data.url!=''){
-                setTimeout(function(){top.window.location.href=data.url; },2000);
+                setTimeout(function(){
+                    top.window.location.href=data.url;
+                },2000);
             }
             if(data.url==''){
-                setTimeout(function(){top.window.location.reload();},1000);
+                setTimeout(function(){
+                    top.window.location.reload();
+                },1000);
             }
         }
     });

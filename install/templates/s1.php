@@ -56,7 +56,7 @@ ThinkPHP通用后台使用协议
 3、本系统虽然有备份、回复数据库功能，但是为了完全建议还是执行备份。（本系统可以作为一个备份补充手动）
 4、由于使用本后台系统出现任何安全问题、数据文件等其他其他与本人无关，请考虑后用。
 
-版权所有(c)2012-2013，<a href="blog.51edm.org" target="_blank" >blog.51edm.org</a> 保留所有权力。</a></pre>
+版权所有(c)2012-2013，<a href="http://blog.51edm.org" target="_blank" >blog.51edm.org</a> 保留所有权力。</a></pre>
                 </div>
                 <div class="bottom tac"> <a href="./index.php?step=2" class="btn">接 受</a> </div>
             </div>

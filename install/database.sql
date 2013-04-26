@@ -1,4 +1,4 @@
-# -----------------------------------------------------------
+﻿# -----------------------------------------------------------
 # PHP-Amateur database backup files
 # Blog: http://blog.51edm.org
 # Type: 系统自动备份
@@ -244,7 +244,7 @@ INSERT INTO `pa_node` VALUES ('10','index','系统设置首页','1','','10','4',
 INSERT INTO `pa_node` VALUES ('11','setEmailConfig','设置系统邮件','1','','12','4','3');
 INSERT INTO `pa_node` VALUES ('12','testEmailConfig','发送测试邮件','1','','0','4','3');
 INSERT INTO `pa_node` VALUES ('13','setSafeConfig','系统安全设置','1','','0','4','3');
-INSERT INTO `pa_node` VALUES ('14','Auth','权限管理','1','权限管理，为系统后台管理员设置不同的权限','0','1','2');
+INSERT INTO `pa_node` VALUES ('14','Access','权限管理','1','权限管理，为系统后台管理员设置不同的权限','0','1','2');
 INSERT INTO `pa_node` VALUES ('15','nodeList','查看节点','1','节点列表信息','0','14','3');
 INSERT INTO `pa_node` VALUES ('16','roleList','角色列表查看','1','角色列表查看','0','14','3');
 INSERT INTO `pa_node` VALUES ('17','addRole','添加角色','1','','0','14','3');
@@ -262,6 +262,19 @@ INSERT INTO `pa_node` VALUES ('28','category','新闻分类管理','1','','0','2
 INSERT INTO `pa_node` VALUES ('29','add','发布新闻','1','','0','26','3');
 INSERT INTO `pa_node` VALUES ('30','edit','编辑新闻','1','','0','26','3');
 INSERT INTO `pa_node` VALUES ('31','del','删除信息','0','','0','26','3');
+INSERT INTO `pa_node` VALUES ('32','SysData','数据库管理','1','包含数据库备份、还原、打包等','0','1','2');
+INSERT INTO `pa_node` VALUES ('33','index','查看数据库表结构信息','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('34','backup','备份数据库','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('35','restore','查看已备份SQL文件','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('36','restoreData','执行数据库还原操作','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('37','delSqlFiles','删除SQL文件','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('38','sendSql','邮件发送SQL文件','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('39','zipSql','打包SQL文件','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('40','zipList','查看已打包SQL文件','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('41','unzipSqlfile','解压缩ZIP文件','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('42','delZipFiles','删除zip压缩文件','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('43','downFile','下载备份的SQL,ZIP文件','1','','0','32','3');
+INSERT INTO `pa_node` VALUES ('44','repair','数据库优化修复','1','','0','32','3');
 
 
 # 数据库表：role 数据信息

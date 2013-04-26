@@ -16,7 +16,7 @@ class PublicModel extends Model {
             if ($datas['op_type'] == 2) {
                 $rc = randCode(5);
                 $code = $info['aid'] . md5($rc);
-                $url = C("WEB_ROOT") . U("Public/findPwd", array("code" => $code));
+                $url = str_replace(C("webPath"),"",C("WEB_ROOT")) . U("Public/findPwd", array("code" => $code));
                 $body = "请在浏览器上打开地址：<a href='$url'>$url</a> 进行密码重置操作                            ";
                 $return = send_mail($datas["email"], "", "找回密码", $body);
                 if ($return == 1) {
@@ -48,7 +48,10 @@ class PublicModel extends Model {
     public function findPwd() {
         $datas = $_POST;
         $M = M("Admin");
-        $this->check_verify_code();
+                if ($_SESSION['verify'] != md5($_POST['verify_code'])) {
+            die(json_encode(array('status' => 0, 'info' => "验证码错误啦，再输入吧")));
+        }
+//        $this->check_verify_code();
         if (trim($datas['pwd']) == '') {
             return array('status' => 0, 'info' => "密码不能为空");
         }

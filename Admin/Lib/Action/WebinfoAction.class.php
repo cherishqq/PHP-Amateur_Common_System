@@ -44,7 +44,13 @@ class WebinfoAction extends CommonAction {
             $config = array_merge($config, array("$obj" => $_POST));
             $str = $obj == "SITE_INFO" ? "网站配置信息" : $obj == "SYSTEM_EMAIL" ? "系统邮箱配置" : "安全设置";
             if (F("systemConfig", $config, WEB_ROOT . "Common/")) {
-                echo json_encode(array('status' => 1, 'info' => $str . '已更新'));
+                delDirAndFile(WEB_CACHE_PATH . "Runtime/Admin/~runtime.php");
+                if ($obj == "TOKEN") {
+                    unset($_SESSION, $_COOKIE);
+                    echo json_encode(array('status' => 1, 'info' => $str . '已更新，你需要重新登录', 'url' => __APP__ . '?' . time()));
+                } else {
+                    echo json_encode(array('status' => 1, 'info' => $str . '已更新'));
+                }
             } else {
                 echo json_encode(array('status' => 0, 'info' => $str . '失败，请检查', 'url' => __ACTION__));
             }

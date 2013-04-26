@@ -83,14 +83,16 @@ class PublicAction extends Action {
             $aid = (int) str_replace($shell, '', $cookie);
             $info = $M->where("`aid`='$aid'")->find();
             if ($info['status'] == 0) {
-                $this->error("你的账号被禁用，有疑问联系管理员吧", "/");
+                $this->error("你的账号被禁用，有疑问联系管理员吧", __APP__);
             }
             if (md5($info['find_code']) == $shell) {
                 $this->assign("info", $info);
                 $_SESSION['aid'] = $aid;
+                $systemConfig = include WEB_ROOT . 'Common/systemConfig.php';
+                $this->assign("site", $systemConfig);
                 $this->display("Common:findPwd");
             } else {
-                $this->error("验证地址不存在或已失效", "/");
+                $this->error("验证地址不存在或已失效", __APP__);
             }
         }
     }
