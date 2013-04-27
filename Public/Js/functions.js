@@ -5,8 +5,8 @@
  */
 function getBodySize(get) {
     var bodySize = [];
-    bodySize['w']=($(document).width()>$(window).width())? $(window).width():$(window).width();
-    bodySize['h']=($(document).height()>$(window).height())? $(window).height():$(window).height();
+    bodySize['w']=($(document).width()>$(window).width())? $(document).width():$(window).width();
+    bodySize['h']=($(document).height()>$(window).height())? $(document).height():$(window).height();
     return get?bodySize[get]:bodySize;
 }
 
